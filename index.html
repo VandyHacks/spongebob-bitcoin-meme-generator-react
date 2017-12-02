@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone"></script>
+    <style>
+        html {
+            background: black;
+            display: flex;
+        }
+
+        body,
+        #app {
+            width: 100%;
+        }
+
+        .meme-container {
+            margin: auto;
+            width: 650px;
+        }
+
+        .meme-input {
+            color: white;
+            background: #444;
+            width: 100%;
+            box-sizing: border-box;
+            border: none;
+            margin: 20px 0;
+            padding: 15px;
+            font-size: 1.25em;
+            border-radius: 4px;
+        }
+
+        .meme {
+            padding-top: 10px;
+            position: relative;
+            text-align: center;
+        }
+
+        .meme img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -2;
+        }
+
+        h1 {
+            font-family: 'Impact', sans-serif;
+            font-weight: bold;
+            color: white;
+            font-size: 3em;
+            margin: 20px 10px;
+            -webkit-text-stroke: 1px black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script type="text/babel">
+            class App extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = { content: 'The current price of Bitcoin is', bitcoinPrice: null };
+                    const updatePrice = () => fetch(`https://api.coindesk.com/v1/bpi/currentprice.json?${Math.floor(Math.random() * 100000)}`)
+                    .then(res => res.json())
+                    .then(res => {
+                        this.setState({ bitcoinPrice: ' $' + res.bpi.USD.rate})
+                        console.log('Updated price')
+                    });
+                    updatePrice();
+                    window.setInterval(updatePrice, 2000);
+                }
+
+                render() {
+                    const content = this.state.content;
+                    let spongebobified = '';
+                    for (let i = 0; i < content.length; ++i) {
+                        const char = content.charAt(i);
+                        if (i % 2 == 0) {
+                            spongebobified += char.toLowerCase();
+                        } else {
+                            spongebobified += char.toUpperCase();
+                        }
+                    }
+
+                    // let spongebobified = this.state.content.split('')
+                    // .reduce((acc, el, i) => acc += i % 2 ? el.toUpperCase() : el.toLowerCase(), '');
+
+                    return (
+                        <div className="meme-container">
+                        <input className="meme-input" placeholder="Insert meme text here" value={this.state.content} onChange={event => this.setState({content: event.target.value})}/>
+                        <div className="meme">
+                            <h1>{spongebobified + this.state.bitcoinPrice}</h1>
+                            <img src="https://yunyul.in/spongebob.jpg"/>
+                        </div>
+                        </div>
+                    )
+                }
+            }
+
+            ReactDOM.render(<App/>, document.querySelector('#app'));
+        </script>
+</body>
+
+</html>
