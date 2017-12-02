@@ -64,7 +64,7 @@
         class App extends React.Component {
             constructor(props) {
                 super(props);
-                this.state = { content: 'The current price of Bitcoin is', bitcoinPrice: null };
+                this.state = { content: 'The current price of Bitcoin is {btc}', bitcoinPrice: null };
                 const updatePrice = () => fetch(`https://api.coindesk.com/v1/bpi/currentprice.json?${Math.floor(Math.random() * 100000)}`)
                     .then(res => res.json()).then(res => this.setState({ bitcoinPrice: ' $' + res.bpi.USD.rate }));
                 updatePrice();
@@ -72,12 +72,11 @@
             }
 
             render() {
-                const spongebobified = spongebobify(this.state.content);
                 return (
                     <div className="meme-container">
                         <input className="meme-input" placeholder="Insert meme text here" value={this.state.content} onChange={event => this.setState({ content: event.target.value })} />
                         <div className="meme">
-                            <h1>{spongebobified + this.state.bitcoinPrice}</h1>
+                            <h1>{spongebobify(this.state.content.replace(/{\s*btc\s*}/g, this.state.bitcoinPrice))}</h1>
                             <img src="https://yunyul.in/spongebob.jpg" />
                         </div>
                     </div>
