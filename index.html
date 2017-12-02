@@ -5,6 +5,7 @@
     <script src="https://unpkg.com/react/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone"></script>
+    <script src="https://unpkg.com/spongebobify@0.2.3/dist/spongebobify.js"></script>
     <style>
         html {
             background: black;
@@ -72,22 +73,16 @@
                     });
                     updatePrice();
                     window.setInterval(updatePrice, 2000);
+
+                    const script = document.createElement("script");
+
+    
                 }
 
                 render() {
                     const content = this.state.content;
-                    let spongebobified = '';
-                    for (let i = 0; i < content.length; ++i) {
-                        const char = content.charAt(i);
-                        if (i % 2 == 0) {
-                            spongebobified += char.toLowerCase();
-                        } else {
-                            spongebobified += char.toUpperCase();
-                        }
-                    }
-
-                    // let spongebobified = this.state.content.split('')
-                    // .reduce((acc, el, i) => acc += i % 2 ? el.toUpperCase() : el.toLowerCase(), '');
+                    let spongebobified = spongebobify(this.state.content);
+                   
 
                     return (
                         <div className="meme-container">
